@@ -125,27 +125,30 @@ Widget buildPartItem(List list, int buildingId) {
             confirmDismiss: (direction) async {
               return await showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text('تأكيد الحذف'),
-                        content:
-                            Text('هل انت متأكد من انك تريد ازالة هذة العنصر'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('تراجع',style: TextStyle(color: Colors.red)),
-                            onPressed: () {
-                              Navigator.of(context).pop(false);
-                            },
-                          ),
-                          TextButton(
-                            child: Text('حذف',
-                                style: TextStyle(color: Colors.red)),
-                            onPressed: () {
-                              Navigator.of(context)
-                                  .pop(true); // Close the dialog
-                            },
-                          ),
-                        ],
-                      ));
+                  builder: (context) => Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: AlertDialog(
+                          title: Text('تأكيد الحذف'),
+                          content:
+                              Text('هل انت متأكد من انك تريد ازالة هذة العنصر'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('تراجع'),
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                            ),
+                            TextButton(
+                              child: Text('حذف',
+                                  style: TextStyle(color: Colors.red)),
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pop(true); // Close the dialog
+                              },
+                            ),
+                          ],
+                        ),
+                  ));
             },
             onDismissed: (direction) {
               AppCubit.get(context).deletepartFormDb(model['id'], buildingId);
