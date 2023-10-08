@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:elevator/componant/componant.dart';
 import 'package:elevator/modules/all_work_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -117,6 +118,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   getAllFromDb(String titel) {
+    emit(Loding());
     database
         .rawQuery("SELECT * FROM building WHERE titel LIKE '%${titel}%'")
         .then((value) {
@@ -126,6 +128,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   getPartsFromDb(int buildingId) {
+    emit(Loding());
     database
         .rawQuery("SELECT * FROM parts WHERE building_id = ${buildingId}")
         .then((value) {
@@ -183,15 +186,17 @@ class AppCubit extends Cubit<AppStates> {
         'UPDATE building SET titel  = ?, description = ?  where id = ? ',
         ['$titel', '$description', id]).then((value) {
       emit(updateDbState());
+      toast('تم حفظ التعديل',Colors.green);
       getFromDb(database);
     }).catchError((error) {
-      print(error);
+      toast(error.toString(),Colors.red);
+      print(error.toString());
     });
   }
 
-  void updateBuildingmonthDb(
+  Future<void> updateBuildingmonthDb(
       {required int month, required int state, required int id}) {
-    database.rawUpdate('UPDATE building SET month${month}  = ?  where id = ? ',
+    return database.rawUpdate('UPDATE building SET month${month}  = ?  where id = ? ',
         [state, id]).then((value) {
       emit(updateDbState());
       getFromDb(database);
@@ -202,9 +207,21 @@ class AppCubit extends Cubit<AppStates> {
 
   void deleteFormDb(int id) {
     database.rawDelete('DELETE FROM building WHERE id = ?', [id]).then((value) {
-      emit(deleteDbState());
-      getFromDb(database);
+      database.rawDelete('DELETE FROM parts WHERE building_id = ?', [id]).then((value) {
+      }).then((value) {
+        emit(deleteDbState());
+        getFromDb(database);
+      });
+
     });
+  }
+
+  void deletepartFormDb(int id, int buildingId ) {
+      database.rawDelete('DELETE FROM parts WHERE id = ?', [id]).then((value) {
+        emit(deleteDbState());
+        getPartsFromDb(buildingId);
+      });
+
   }
 
   static bool isDark = false;
@@ -221,8 +238,12 @@ class AppCubit extends Cubit<AppStates> {
     print(dropdownMonthValue);
     emit(dropdownButtonState());
   }
+  bool isEnabled = false;
 
-
+ void change (bool s){
+   isEnabled = s;
+    emit(ChangeMode());
+ }
 // void getSearch (value) {
 //   emit(Loding());
 //   DioHelper.getData('api/1/news',

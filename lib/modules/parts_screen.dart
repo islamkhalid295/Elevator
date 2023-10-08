@@ -51,12 +51,29 @@ class _PartsScreenState extends State<PartsScreen> {
             ],
           ),
           body: ConditionalBuilderRec(
-            builder: (context) {
-              var list = cubit.parts;
-              return buildPartItem(list);
-            },
-            condition: cubit.parts.isNotEmpty,
+            condition: state is! Loding,
             fallback: (context) => Center(child: CircularProgressIndicator()),
+            builder: (context) {
+              return ConditionalBuilderRec(
+                condition: cubit.parts.isNotEmpty,
+                fallback: (context) => Container(
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Icon(Icons.menu,color: Colors.grey,),
+                      Text("القائمة فارغة",style: TextStyle(fontSize: 20,color: Colors.grey),),
+                    ],
+                  ),
+                ),
+                builder: (context) {
+                  var list = cubit.parts;
+                  return buildPartItem(list,widget.model['id']);
+                },
+              );
+            },
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {

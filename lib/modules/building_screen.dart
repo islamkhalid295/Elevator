@@ -54,34 +54,39 @@ class _BuildingScreenState extends State<BuildingScreen> {
           backgroundColor: defaultColor[100],
           actions: [
             IconButton(
-              icon: Icon(
-                Icons.delete_outline,
-                color: Colors.red,
-              ),
-              onPressed: () {
-                print('Alart');
-                showDialog(context: context, builder: (context) => AlertDialog (
-                  title: Text('تأكيد الحذف'),
-                  content: Text('هل انت متأكد من انك تريد ازالة هذة العمارة'),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text('تراجع'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      child: Text('حذف', style: TextStyle(color: Colors.red)),
-                      onPressed: () {
-                        AppCubit.get(context).deleteFormDb(widget.model['id']);
-                        Navigator.of(context).pop(); // Close the dialog
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
-                    ),
-                  ],
-                ));
-              }
-            )
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text('تأكيد الحذف'),
+                            content: Text(
+                                'هل انت متأكد من انك تريد ازالة هذة العمارة'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('تراجع'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('حذف',
+                                    style: TextStyle(color: Colors.red)),
+                                onPressed: () {
+                                  AppCubit.get(context)
+                                      .deleteFormDb(widget.model['id']);
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                  Navigator.of(context)
+                                      .pop(); // Close the dialog
+                                },
+                              ),
+                            ],
+                          ));
+                })
           ],
         ),
         body: Padding(
@@ -121,6 +126,14 @@ class _BuildingScreenState extends State<BuildingScreen> {
                 SizedBox(height: 20),
                 TextFormField(
                   controller: titelcontroller,
+                  enabled: cubit.isEnabled,
+                  
+                  onTap: () {
+                    setState(() {
+                      cubit.change(cubit.isEnabled);
+                      print("taaaaaaaaaaaaaaaaaaaaaaaaaap");
+                    });
+                  },
                   decoration: InputDecoration(
                       label: Text(
                         'تعديل اسم العمارة',
@@ -135,6 +148,10 @@ class _BuildingScreenState extends State<BuildingScreen> {
                 ),
                 TextFormField(
                   controller: descriptioncontroller,
+                  enabled: cubit.isEnabled,
+                  onTap: () {
+                    cubit.isEnabled = true;
+                  },
                   decoration: InputDecoration(
                       label: Text(
                         'تعديل الوصف',
@@ -146,15 +163,21 @@ class _BuildingScreenState extends State<BuildingScreen> {
                 SizedBox(
                   height: 15,
                 ),
-                MaterialButton(
-                    color: defaultColor[300],
-                    child: Text('حفظ',
-                        style: TextStyle(fontSize: 20, color: Colors.white)),
-                    onPressed: () {
+                OutlinedButton(
+
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: defaultColor),
+                    ),
+                    child: Text( cubit.isEnabled ?'حفظ' : 'اضغط هنا للتعديل',
+                        style: TextStyle(fontSize: 20, color: cubit.isEnabled ? defaultColor : Colors.grey)),
+                    onPressed: cubit.isEnabled ? () {
+                      cubit.isEnabled = false;
                       cubit.updateBuildingNameDb(
                           titel: titelcontroller.text,
                           description: descriptioncontroller.text,
                           id: widget.model['id']);
+                    } : (){
+                      cubit.change(true);
                     }),
                 Padding(
                   padding: const EdgeInsets.all(20),
@@ -171,18 +194,19 @@ class _BuildingScreenState extends State<BuildingScreen> {
                         return InkWell(
                           onTap: () {
                             int state;
-
-                            state =
-                                widget.model['month${index + 1}'] == 1 ? 0 : 1;
-                            setState(() {
+                            state = widget.model['month${index + 1}'] == 1 ? 0 : 1;
                               cubit.updateBuildingmonthDb(
                                   month: index + 1,
                                   id: widget.model['id'],
-                                  state: state);
-                              colors[index] = colors[index] == Colors.grey
-                                  ? Colors.orange[300]
-                                  : Colors.grey;
-                            });
+                                  state: state).then((value) {
+                                    setState(() {
+                                      colors[index] = state == 1
+                                          ? Colors.orange[300]
+                                          : Colors.grey;
+                                    });
+                                  });
+
+
                           },
                           child: Container(
                             width: 1,

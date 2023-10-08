@@ -45,20 +45,26 @@ class _MyHomePageState extends State<MyHomePage> {
                         ));
                   },
                   icon: Icon(Icons.search)),
-              DropdownMenu<String>(
-                width: 100,
-                hintText: "اسلام",
-                label: Text("شهر"),
-                initialSelection: AppCubit.monthList.first,
-                onSelected: (String? value) {
-                  cubit.dropdownButtonChange(value);
-                },
-                dropdownMenuEntries: AppCubit.monthList
-                    .map<DropdownMenuEntry<String>>(
-                        (String value) {
-                      return DropdownMenuEntry<String>(
-                          value: value, label: value);
-                    }).toList(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DropdownMenu<String>(
+                  width: 100,
+
+                  menuStyle: MenuStyle(shadowColor: MaterialStateColor.resolveWith((states) => Colors.orange
+                  )),
+                  label: Text("شهر"),
+                  initialSelection: AppCubit.monthList.first,
+                  onSelected: (String? value) {
+                    cubit.dropdownButtonChange(value);
+                  },
+                  dropdownMenuEntries: AppCubit.monthList
+                      .map<DropdownMenuEntry<String>>(
+                          (String value) {
+                        return DropdownMenuEntry<String>(
+                            value: value, label: value,style: ButtonStyle(overlayColor: MaterialStateColor.resolveWith((states) => defaultColor.shade100),
+                        ));
+                      }).toList(),
+                ),
               ),              // IconButton(
               //     onPressed: () {
               //       cubit.changeThemeMode();
