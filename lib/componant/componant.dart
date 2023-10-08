@@ -43,12 +43,39 @@ Widget buildItem(List list) {
                 SizedBox(width: 10),
                 IconButton(
                     onPressed: () {
-                      model['month${AppCubit.get(context).dropdownMonthValue.substring(AppCubit.get(context).dropdownMonthValue.length - 1)}'] ==
-                              1
-                          ? AppCubit.get(context)
-                              .updateDb(state: 0, id: model['id'])
-                          : AppCubit.get(context)
-                              .updateDb(state: 1, id: model['id']);
+                      showDialog(
+                          context: context,
+                          builder: (context) => Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: AlertDialog(
+                              title: Text('تأكيد الدفع'),
+                              // content: Text(
+                              //     'تأكيد عملية الدفع'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('تراجع', style: TextStyle(color: Colors.red)),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  style: TextButton.styleFrom(backgroundColor: Colors.grey[300]),
+                                ),
+                                TextButton(
+                                  child: Text('تم الدفع',
+                                      style: TextStyle(color: Colors.green)),
+                                  onPressed: () {
+                                    model['month${AppCubit.get(context).dropdownMonthValue.substring(AppCubit.get(context).dropdownMonthValue.length - 1)}'] ==
+                                        1
+                                        ? AppCubit.get(context)
+                                        .updateDb(state: 0, id: model['id'])
+                                        : AppCubit.get(context)
+                                        .updateDb(state: 1, id: model['id']);
+                                    Navigator.of(context).pop();
+                                  },
+                                  style: TextButton.styleFrom(backgroundColor: Colors.grey[300]),
+                                ),
+                              ],
+                            ),
+                          ));
                     },
                     icon:
                         model['month${AppCubit.get(context).dropdownMonthValue.substring(AppCubit.get(context).dropdownMonthValue.length - 1)}'] ==
@@ -61,14 +88,6 @@ Widget buildItem(List list) {
                                 Icons.check_box_outline_blank,
                                 color: Colors.red,
                               )),
-                IconButton(
-                    onPressed: () {
-                      //appCubit.get(context).updateDb(state: 'archive', id: model['id']);
-                    },
-                    icon: Icon(
-                      Icons.archive_outlined,
-                      color: Colors.grey,
-                    )),
               ],
             ),
           ),
@@ -112,7 +131,7 @@ Widget buildPartItem(List list, int buildingId) {
                             Text('هل انت متأكد من انك تريد ازالة هذة العنصر'),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('تراجع'),
+                            child: Text('تراجع',style: TextStyle(color: Colors.red)),
                             onPressed: () {
                               Navigator.of(context).pop(false);
                             },

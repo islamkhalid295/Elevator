@@ -1,15 +1,12 @@
 import 'package:elevator/cubit/appCubit.dart';
-import 'package:elevator/cubit/appStates.dart';
 import 'package:elevator/modules/parts_screen.dart';
 import 'package:elevator/shared/shared.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../shared/shared.dart';
-import '../shared/shared.dart';
+
 
 class BuildingScreen extends StatefulWidget {
-  var model;
+  final model;
 
   BuildingScreen(this.model);
 
@@ -61,31 +58,34 @@ class _BuildingScreenState extends State<BuildingScreen> {
                 onPressed: () {
                   showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
-                            title: Text('تأكيد الحذف'),
-                            content: Text(
-                                'هل انت متأكد من انك تريد ازالة هذة العمارة'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: Text('تراجع'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              TextButton(
-                                child: Text('حذف',
-                                    style: TextStyle(color: Colors.red)),
-                                onPressed: () {
-                                  AppCubit.get(context)
-                                      .deleteFormDb(widget.model['id']);
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
-                                },
-                              ),
-                            ],
-                          ));
+                      builder: (context) => Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: AlertDialog(
+                              title: Text('تأكيد الحذف'),
+                              content: Text(
+                                  'هل انت متأكد من انك تريد ازالة هذة العمارة'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('تراجع'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text('حذف',
+                                      style: TextStyle(color: Colors.red)),
+                                  onPressed: () {
+                                    AppCubit.get(context)
+                                        .deleteFormDb(widget.model['id']);
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                ),
+                              ],
+                            ),
+                      ));
                 })
           ],
         ),
@@ -193,20 +193,45 @@ class _BuildingScreenState extends State<BuildingScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
                           onTap: () {
-                            int state;
-                            state = widget.model['month${index + 1}'] == 1 ? 0 : 1;
-                              cubit.updateBuildingmonthDb(
-                                  month: index + 1,
-                                  id: widget.model['id'],
-                                  state: state).then((value) {
-                                    setState(() {
-                                      colors[index] = state == 1
-                                          ? Colors.orange[300]
-                                          : Colors.grey;
-                                    });
-                                  });
-
-
+                            showDialog(
+                                context: context,
+                                builder: (context) => Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: AlertDialog(
+                                    title: Text(' تأكيد الدفع شهر ${index + 1}'),
+                                    // content: Text(
+                                    //     'تأكيد عملية الدفع'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('تراجع', style: TextStyle(color: Colors.red)),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: TextButton.styleFrom(backgroundColor: Colors.grey[300]),
+                                      ),
+                                      TextButton(
+                                        child: Text('تم الدفع',
+                                            style: TextStyle(color: Colors.green)),
+                                        onPressed: () {
+                                          int state;
+                                          state = widget.model['month${index + 1}'] == 1 ? 0 : 1;
+                                          cubit.updateBuildingmonthDb(
+                                              month: index + 1,
+                                              id: widget.model['id'],
+                                              state: state).then((value) {
+                                            setState(() {
+                                              colors[index] = state == 1
+                                                  ? Colors.orange[300]
+                                                  : Colors.grey;
+                                            });
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: TextButton.styleFrom(backgroundColor: Colors.grey[300]),
+                                      ),
+                                    ],
+                                  ),
+                                ));
                           },
                           child: Container(
                             width: 1,
