@@ -1,5 +1,4 @@
 import 'package:conditional_builder_rec/conditional_builder_rec.dart';
-import 'package:elevator/modules/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -79,7 +78,7 @@ class _PartsScreenState extends State<PartsScreen> {
             onPressed: () {
               if (cubit.sheetIsOpen) {
                 if (formKey.currentState!.validate()) {
-                  cubit.insertPartIntoDb(titelController.text, descriptionController.text,widget.model['id'],double.parse(priceController.text),dateController.text,timeController.text);
+                  cubit.insertPartIntoDb(titelController.text, descriptionController.text,widget.model['id'],double.parse(priceController.text),dateController.text);
                   print('titel : ${titelController.text}');
                   cubit.changeBottomSheetState(false, Icons.edit);
                 }
@@ -137,35 +136,37 @@ class _PartsScreenState extends State<PartsScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                           TextFormField(
-                               controller: timeController,
-                               onTap: () {
-                                 showTimePicker(
-                                         context: context,
-                                         initialTime: TimeOfDay.now())
-                                     .then((value) {
-                                   timeController.text =
-                                       value!.format(context);
-                                 });
-                               },
-                               validator: (value) {
-                                 if (value!.isEmpty)
-                                   timeController.text = '${TimeOfDay.now().format(context)}';
-                               },
-                               decoration: InputDecoration(
-                                   label: Text("الوقت"),
-                                   icon: Icon(
-                                       Icons.watch_later_outlined),
-                                   border: OutlineInputBorder(
-                                       borderRadius: BorderRadius.all(
-                                           Radius.circular(10))))),
+                           // TextFormField(
+                           //     controller: timeController,
+                           //     onTap: () {
+                           //       showTimePicker(
+                           //               context: context,
+                           //               initialTime: TimeOfDay.now())
+                           //           .then((value) {
+                           //         timeController.text =
+                           //             value!.format(context);
+                           //       });
+                           //     },
+                           //     validator: (value) {
+                           //       if (value!.isEmpty)
+                           //         timeController.text = '${TimeOfDay.now().format(context)}';
+                           //     },
+                           //     decoration: InputDecoration(
+                           //         label: Text("الوقت"),
+                           //         icon: Icon(
+                           //             Icons.watch_later_outlined),
+                           //         border: OutlineInputBorder(
+                           //             borderRadius: BorderRadius.all(
+                           //                 Radius.circular(10))))),
                            SizedBox(
                              height: 10,
                            ),
                           TextFormField(
                               controller: dateController,
                               onTap: () {
-                                showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2023), lastDate: DateTime.now().isAfter(DateTime(2050)) ? DateTime.now() :DateTime(2050) );
+                                showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2023), lastDate: DateTime.now().isAfter(DateTime(2050)) ? DateTime.now() :DateTime(2050) ).then((value) {
+                                  dateController.text = DateFormat('dd-MM-yyyy').format(value!);
+                                });
                               },
                               validator: (value) {
                                 if (value!.isEmpty)

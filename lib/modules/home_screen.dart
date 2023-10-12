@@ -19,6 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var titelController = TextEditingController();
   var descriptionController = TextEditingController();
+  var priceController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -32,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
-            title: Text("متابع المصاعد"),
+            title: FittedBox(child: Text("متابع المصاعد")),
             elevation: 0,
             backgroundColor: defaultColor[100],
             actions: [
@@ -48,11 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: DropdownMenu<String>(
-                  width: 100,
-
+                  width: 130,
                   menuStyle: MenuStyle(shadowColor: MaterialStateColor.resolveWith((states) => Colors.orange
                   )),
-                  label: Text("شهر"),
+                  label: Text("الشهر"),
                   initialSelection: AppCubit.monthList.first,
                   onSelected: (String? value) {
                     cubit.dropdownButtonChange(value);
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           body: ConditionalBuilderRec(
             builder: (context) => cubit.screens[cubit.currentIndex],
-            condition: true,
+            condition: state is! Loding,
             fallback: (context) => Center(child: CircularProgressIndicator()),
           ),
           floatingActionButton: FloatingActionButton(
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
               if (cubit.sheetIsOpen) {
                 if (formKey.currentState!.validate()) {
                   cubit.insertBuildingDb(titelController.text,
-                      descriptionController.text);
+                      descriptionController.text,double.parse(priceController.text));
                   print(
                       'dis : ${descriptionController.text}\n status : ${cubit.dropdownMonthValue}');
                   cubit.changeBottomSheetState(false, Icons.edit);
@@ -149,6 +149,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                   SizedBox(
                                     height: 10,
                                   ),
+                                  TextFormField(
+                                      controller: priceController,
+                                      keyboardType: TextInputType.number,
+                                      validator: (value) {
+                                        if (value!.isEmpty)
+                                          return 'يجب ادخال سعر الصيانة';
+                                        if(double.parse(value) is! num)
+                                          return 'يجب ان يكون السعر ارقام';
+                                      },
+                                      decoration: InputDecoration(
+                                          label: Text("سعر الصيانة"),
+                                          icon: Icon(Icons.attach_money),
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))))),
                                   // DropdownMenu<String>(
                                   //   initialSelection: AppCubit.paidList.first,
                                   //   onSelected: (String? value) {

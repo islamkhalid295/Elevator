@@ -14,8 +14,9 @@ class allWork extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state)
       {
-        var list = new List.from(AppCubit.get(context).notPaidBuilding)..addAll(AppCubit.get(context).paidBuilding);
-        return buildItem(list);
+
+        return buildItem(AppCubit.get(context).allBuilding,state);
+
       }
     );
   }

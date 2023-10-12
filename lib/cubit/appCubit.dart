@@ -52,12 +52,13 @@ class AppCubit extends Cubit<AppStates> {
       'elevator.db',
       onCreate: (db, version) {
         db.execute(
-            'CREATE TABLE parts (id INTEGER PRIMARY KEY, building_id INTEGER, titel TEXT,price INTEGER,time TEXT, date TEXT, description TEXT)')
+            'CREATE TABLE parts (id INTEGER PRIMARY KEY, building_id INTEGER, titel TEXT,price INTEGER, date TEXT, description TEXT)')
             .then((value) {
           print("TABLE building created");
           db.execute(
-              'CREATE TABLE building (id INTEGER PRIMARY KEY, titel TEXT, date TEXT, description TEXT, month1 INTEGER, month2 INTEGER, month3 INTEGER, month4 INTEGER, month5 INTEGER, month6 INTEGER, month7 INTEGER, month8 INTEGER, month9 INTEGER, month10 INTEGER, month11 INTEGER, month12 INTEGER)')
+              'CREATE TABLE building (id INTEGER PRIMARY KEY, titel TEXT, price INTEGER, description TEXT, month1 INTEGER, month2 INTEGER, month3 INTEGER, month4 INTEGER, month5 INTEGER, month6 INTEGER, month7 INTEGER, month8 INTEGER, month9 INTEGER, month10 INTEGER, month11 INTEGER, month12 INTEGER)')
               .then((value) {
+            emit(createDbState());
             print("TABLE parts created");
           }).catchError((error) {
             print(error.toString());
@@ -74,7 +75,6 @@ class AppCubit extends Cubit<AppStates> {
       version: 2,
     ).then((value) {
       database = value;
-      emit(createDbState());
     });
   }
 
@@ -83,11 +83,11 @@ class AppCubit extends Cubit<AppStates> {
     print("Database ${s} deleted");
   }
 
-  Future<void> insertBuildingDb(String titel, String description) async {
+  Future<void> insertBuildingDb(String titel, String description,double price) async {
     await database.transaction((txn) {
       txn
           .rawInsert(
-              'INSERT INTO building (titel,description, month1, month2, month3, month4, month5, month6, month7, month8, month9, month10, month11, month12) VALUES ("${titel}", "${description}", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)')
+              'INSERT INTO building (titel,description,price, month1, month2, month3, month4, month5, month6, month7, month8, month9, month10, month11, month12) VALUES ("${titel}", "${description}", "${price}", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)')
           .then((value) {
         print('Data : ${value.toString()}');
         emit(insertDbState());
@@ -99,12 +99,12 @@ class AppCubit extends Cubit<AppStates> {
       getFromDb(database);
     });
   }
-  Future<void> insertPartIntoDb(String titel, String description,int building_id, double price,String date,String time) async {
+  Future<void> insertPartIntoDb(String titel, String description,int building_id, double price,String date) async {
     await database.transaction((txn) {
       txn
           .rawInsert(
  //'CREATE TABLE parts (id INTEGER PRIMARY KEY, building_id INTEGER, titel TEXT,price INTEGER, date TEXT, description TEXT)')
-      'INSERT INTO parts (titel,description,building_id,price,date,time ) VALUES ("${titel}", "${description}","${building_id}","${price}","${date}","${time}")')
+      'INSERT INTO parts (titel,description,building_id,price,date) VALUES ("${titel}", "${description}","${building_id}","${price}","${date}")')
           .then((value) {
         print('Data : ${value.toString()}');
         emit(insertDbState());
@@ -138,21 +138,23 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   getFromDb(Database database) {
+    emit(Loding());
     database
         .rawQuery(
             "SELECT * FROM building WHERE month${dropdownMonthValue.substring(dropdownMonthValue.length - 1)} = 0 ")
         .then((value) {
+      database.rawQuery(
+          "SELECT * FROM building WHERE month${dropdownMonthValue.substring(dropdownMonthValue.length - 1)} = 1")
+          .then((value) {
+        paidBuilding = value;
+        print(' تم التحصيل ${value}');
+      }).catchError((error) {
+        print(error);
+      });
       notPaidBuilding = value;
+      allBuilding = new List.from(notPaidBuilding)..addAll(paidBuilding);
       emit(getDbState());
       print(' لم يتم التحصيل${value}');
-    });
-    database
-        .rawQuery(
-            "SELECT * FROM building WHERE month${dropdownMonthValue.substring(dropdownMonthValue.length - 1)} = 1")
-        .then((value) {
-      paidBuilding = value;
-      emit(getDbState());
-      print(' تم التحصيل ${value}');
     }).catchError((error) {
       print(error);
     });
@@ -181,7 +183,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   void updateBuildingNameDb(
-      {required String titel, required String description, required int id}) {
+      {required String titel, required String description,required double price, required int id}) {
     database.rawUpdate(
         'UPDATE building SET titel  = ?, description = ?  where id = ? ',
         ['$titel', '$description', id]).then((value) {

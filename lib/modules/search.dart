@@ -140,7 +140,7 @@ class Search extends StatelessWidget {
                   return Expanded(
                     child: ConditionalBuilderRec(
                       condition: state is! Loding,
-                      builder: (context) => buildItem(list),
+                      builder: (context) => buildItem(list,state),
                       fallback: (context) =>
                           Center(child: CircularProgressIndicator()),
                     ),
