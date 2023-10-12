@@ -14,7 +14,7 @@ Widget buildItem(List list,state) {
       condition: list.isNotEmpty,
       fallback: (context) => Container(
         width: double.infinity,
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
@@ -38,31 +38,31 @@ Widget buildItem(List list,state) {
                 child: Row(
                   children: [
                     CircleAvatar(
+                      radius: 15,
                       child: Padding(
                         padding: const EdgeInsets.all(1.5),
                         child: FittedBox(child: Text("${model['id']}")),
                       ),
-                      radius: 15,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text("${model['titel']}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     overflow: TextOverflow.ellipsis)),
                             Text("${model['description']}",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.grey,
                                     overflow: TextOverflow.ellipsis),
                                 maxLines: 2),
                           ]),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     IconButton(
                         onPressed: () {
                           showDialog(
@@ -70,23 +70,20 @@ Widget buildItem(List list,state) {
                               builder: (context) => Directionality(
                                 textDirection: TextDirection.rtl,
                                 child: AlertDialog(
-                                  title: Text('تأكيد الدفع'),
+                                  title: const Text('تأكيد الدفع'),
                                   // content: Text(
                                   //     'تأكيد عملية الدفع'),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: Text('تراجع',
-                                          style: TextStyle(color: Colors.red)),
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
                                       style: TextButton.styleFrom(
                                           backgroundColor: Colors.grey[300]),
+                                      child: const Text('تراجع',
+                                          style: TextStyle(color: Colors.red)),
                                     ),
                                     TextButton(
-                                      child: Text('تم الدفع',
-                                          style:
-                                          TextStyle(color: Colors.green)),
                                       onPressed: () {
                                         model['month${AppCubit.get(context).dropdownMonthValue.substring(AppCubit.get(context).dropdownMonthValue.length - 1)}'] ==
                                             1
@@ -98,6 +95,9 @@ Widget buildItem(List list,state) {
                                       },
                                       style: TextButton.styleFrom(
                                           backgroundColor: Colors.grey[300]),
+                                      child: const Text('تم الدفع',
+                                          style:
+                                          TextStyle(color: Colors.green)),
                                     ),
                                   ],
                                 ),
@@ -106,11 +106,11 @@ Widget buildItem(List list,state) {
                         icon:
                         model['month${AppCubit.get(context).dropdownMonthValue.substring(AppCubit.get(context).dropdownMonthValue.length - 1)}'] ==
                             1
-                            ? Icon(
+                            ? const Icon(
                           Icons.check_box,
                           color: Colors.green,
                         )
-                            : Icon(
+                            : const Icon(
                           Icons.check_box_outline_blank,
                           color: Colors.red,
                         )),
@@ -126,19 +126,20 @@ Widget buildItem(List list,state) {
           ),
           itemCount: list.length)
     ),
-    fallback: (context) => Center(child: CircularProgressIndicator()),
+    fallback: (context) => const Center(child: CircularProgressIndicator()),
   );
 }
 
 Widget buildPartItem(List list, int buildingId) {
   return ListView.separated(
-    padding: EdgeInsets.only(bottom:20),
+    padding: const EdgeInsets.only(bottom:20),
       itemBuilder: (context, index) {
         var model = list[index];
         return Dismissible(
           background: Container(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+            color: Colors.red,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
               child: Row(
                 children: [
                   Icon(
@@ -155,7 +156,6 @@ Widget buildPartItem(List list, int buildingId) {
                 ],
               ),
             ),
-            color: Colors.red,
           ),
           key: UniqueKey(),
           confirmDismiss: (direction) async {
@@ -164,18 +164,18 @@ Widget buildPartItem(List list, int buildingId) {
                 builder: (context) => Directionality(
                       textDirection: TextDirection.rtl,
                       child: AlertDialog(
-                        title: Text('تأكيد الحذف'),
+                        title: const Text('تأكيد الحذف'),
                         content:
-                            Text('هل انت متأكد من انك تريد ازالة هذة العنصر'),
+                            const Text('هل انت متأكد من انك تريد ازالة هذة العنصر'),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('تراجع'),
+                            child: const Text('تراجع'),
                             onPressed: () {
                               Navigator.of(context).pop(false);
                             },
                           ),
                           TextButton(
-                            child: Text('حذف',
+                            child: const Text('حذف',
                                 style: TextStyle(color: Colors.red)),
                             onPressed: () {
                               Navigator.of(context)
@@ -194,16 +194,16 @@ Widget buildPartItem(List list, int buildingId) {
             title: Row(
               children: [
                 CircleAvatar(
+                  radius: 15,
                   child: Padding(
                     padding: const EdgeInsets.all(1.5),
                     child: FittedBox(child: Text("${model['id']}")),
                   ),
-                  radius: 15,
                 ),
-                SizedBox(width: 6),
+                const SizedBox(width: 6),
                 Expanded(
                   child: Text("${model['titel']}",
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.ellipsis)),
@@ -220,35 +220,35 @@ Widget buildPartItem(List list, int buildingId) {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            RichText(text: TextSpan(text: "${model['titel']}",style:TextStyle(fontSize: 20,color: Colors.black,
+                            RichText(text: TextSpan(text: "${model['titel']}",style:const TextStyle(fontSize: 20,color: Colors.black,
                               fontWeight: FontWeight.bold,)),
                             ),
-                            RichText(text: TextSpan(text:"${model['description']}",style: TextStyle(
+                            RichText(text: TextSpan(text:"${model['description']}",style: const TextStyle(
                               color: Colors.grey,
                             ), ),
 
 
                             ),
                             Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(5),topRight: Radius.circular(5)),color: defaultColor[100],),
+                              decoration: BoxDecoration(borderRadius: const BorderRadius.only(topLeft: Radius.circular(5),topRight: Radius.circular(5)),color: defaultColor[100],),
 
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: FittedBox(
+                                      fit: BoxFit.scaleDown,
                                       child: Text('السعر : ${model['price']}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
 
                                           ),
                                       textAlign: TextAlign.center
                                       ),
-                                      fit: BoxFit.scaleDown,
                                     ),
                                   ),
                                   Expanded(
                                     child: Text('التاريخ : ${model['date']}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                     textAlign: TextAlign.center),

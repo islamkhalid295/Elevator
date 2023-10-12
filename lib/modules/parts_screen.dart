@@ -2,14 +2,14 @@ import 'package:conditional_builder_rec/conditional_builder_rec.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import '../componant/componant.dart';
+import '../component/component.dart';
 import '../cubit/appCubit.dart';
 import '../cubit/appStates.dart';
 import '../shared/shared.dart';
 
 class PartsScreen extends StatefulWidget {
   PartsScreen(this.model, {super.key});
-var model;
+  var model;
   @override
   State<PartsScreen> createState() => _PartsScreenState();
 }
@@ -34,30 +34,19 @@ class _PartsScreenState extends State<PartsScreen> {
         return Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
-            title: Text("قطع الغيار"),
+            title: const Text("قطع الغيار"),
             elevation: 0,
             backgroundColor: defaultColor[100],
-            actions: [
-              // IconButton(
-              //     onPressed: () {
-              //       Navigator.push(
-              //           context,
-              //           MaterialPageRoute(
-              //             builder: (context) => Search(),
-              //           ));
-              //     },
-              //     icon: Icon(Icons.search)),
-            ],
           ),
           body: ConditionalBuilderRec(
             condition: state is! Loding,
-            fallback: (context) => Center(child: CircularProgressIndicator()),
+            fallback: (context) => const Center(child: CircularProgressIndicator()),
             builder: (context) {
               return ConditionalBuilderRec(
                 condition: cubit.parts.isNotEmpty,
                 fallback: (context) => Container(
                   width: double.infinity,
-                  child: Column(
+                  child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
@@ -79,7 +68,6 @@ class _PartsScreenState extends State<PartsScreen> {
               if (cubit.sheetIsOpen) {
                 if (formKey.currentState!.validate()) {
                   cubit.insertPartIntoDb(titelController.text, descriptionController.text,widget.model['id'],double.parse(priceController.text),dateController.text);
-                  print('titel : ${titelController.text}');
                   cubit.changeBottomSheetState(false, Icons.edit);
                 }
               } else {
@@ -96,44 +84,48 @@ class _PartsScreenState extends State<PartsScreen> {
                           TextFormField(
                               controller: titelController,
                               validator: (value) {
-                                if (value!.isEmpty)
+                                if (value!.isEmpty) {
                                   return 'يجب ادخال اسم قطعة الغيار';
+                                }
+                                return null;
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text("اسم قطعة الغيار"),
                                   icon: Icon(Icons.title_outlined),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))))),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
                             keyboardType: TextInputType.number,
                               controller: priceController,
                               validator: (value) {
-                                if (value!.isEmpty)
+                                if (value!.isEmpty) {
                                   return 'يجب ادخال السعر';
+                                }
+                                return null;
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text("السعر"),
                                   icon: Icon(Icons.attach_money),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))))),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           TextFormField(
                               controller: descriptionController,
 
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text("الوصف"),
                                   icon: Icon(Icons.text_snippet_outlined),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))))),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                            // TextFormField(
@@ -158,7 +150,7 @@ class _PartsScreenState extends State<PartsScreen> {
                            //         border: OutlineInputBorder(
                            //             borderRadius: BorderRadius.all(
                            //                 Radius.circular(10))))),
-                           SizedBox(
+                           const SizedBox(
                              height: 10,
                            ),
                           TextFormField(
@@ -169,10 +161,13 @@ class _PartsScreenState extends State<PartsScreen> {
                                 });
                               },
                               validator: (value) {
-                                if (value!.isEmpty)
+                                if (value!.isEmpty) {
                                   dateController.text = '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}';
-                              },
-                              decoration: InputDecoration(
+                                }
+                                return null;
+
+                                },
+                              decoration: const InputDecoration(
                                   label: Text("التاريخ"),
                                   icon: Icon(
                                       Icons.calendar_month),
@@ -189,7 +184,6 @@ class _PartsScreenState extends State<PartsScreen> {
                   cubit.changeBottomSheetState(false, Icons.edit);
                 });
                 cubit.changeBottomSheetState(true, Icons.add);
-                print("sheet opend");
               }
             },
             tooltip: 'Increment',

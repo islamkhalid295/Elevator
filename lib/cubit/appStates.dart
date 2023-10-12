@@ -1,28 +1,28 @@
 abstract class AppStates {}
 
-class appInitState extends AppStates{}
+class AppInitState extends AppStates{}
 
-class createDbState extends AppStates {}
+class CreateDbState extends AppStates {}
 
-class insertDbState extends AppStates {}
+class InsertDbState extends AppStates {}
 
-class getDbState extends AppStates {}
+class GetDbState extends AppStates {}
 
-class updateDbState extends AppStates {}
+class UpdateDbState extends AppStates {}
 
-class deleteDbState extends AppStates {}
+class DeleteDbState extends AppStates {}
 
-class bottomSheetChangeState extends AppStates {}
+class BottomSheetChangeState extends AppStates {}
 
-class navBarChangeState extends AppStates {}
+class NavBarChangeState extends AppStates {}
 
 class ChangeMode extends AppStates {}
 
-class dropdownButtonState extends AppStates {}
+class DropdownButtonState extends AppStates {}
 
 class Loding extends AppStates {}
 
-class getPartsFromDbState extends AppStates {}
+class GetPartsFromDbState extends AppStates {}
 
 class AlartState extends AppStates {}
 

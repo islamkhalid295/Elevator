@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 class BuildingScreen extends StatefulWidget {
   final model;
 
-  BuildingScreen(this.model);
+  BuildingScreen(this.model, {super.key});
 
   @override
   State<BuildingScreen> createState() => _BuildingScreenState();
 }
 
 class _BuildingScreenState extends State<BuildingScreen> {
-  var titelcontroller = TextEditingController();
-  var descriptioncontroller = TextEditingController();
-  var pricecontroller = TextEditingController();
+  var titelController = TextEditingController();
+  var descriptionController = TextEditingController();
+  var priceController = TextEditingController();
   late List<dynamic> colors = List.generate(
       12,
       (index) => widget.model['month${(index + 1)}'] == 1
@@ -23,7 +23,7 @@ class _BuildingScreenState extends State<BuildingScreen> {
           : Colors.grey);
   List<Widget> iconButtons = List.generate(12, (index) {
     return IconButton(
-      icon: Icon(Icons.star), // Replace with your desired icon
+      icon: const Icon(Icons.star), // Replace with your desired icon
       onPressed: () {
         // Add your onPressed functionality here
       },
@@ -33,10 +33,10 @@ class _BuildingScreenState extends State<BuildingScreen> {
   @override
   void initState() {
     super.initState();
-    titelcontroller = TextEditingController(text: widget.model['titel']);
-    descriptioncontroller =
+    titelController = TextEditingController(text: widget.model['titel']);
+    descriptionController =
         TextEditingController(text: widget.model['description']);
-    pricecontroller =
+    priceController =
         TextEditingController(text: widget.model['price'].toString());
   }
 
@@ -47,12 +47,12 @@ class _BuildingScreenState extends State<BuildingScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("متابع المصاعد"),
+          title: const Text("متابع المصاعد"),
           elevation: 0,
           backgroundColor: defaultColor[100],
           actions: [
             IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete_outline,
                   color: Colors.red,
                 ),
@@ -62,18 +62,18 @@ class _BuildingScreenState extends State<BuildingScreen> {
                       builder: (context) => Directionality(
                             textDirection: TextDirection.rtl,
                             child: AlertDialog(
-                              title: Text('تأكيد الحذف'),
-                              content: Text(
+                              title: const Text('تأكيد الحذف'),
+                              content: const Text(
                                   'هل انت متأكد من انك تريد ازالة هذة العمارة'),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('تراجع'),
+                                  child: const Text('تراجع'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
                                 TextButton(
-                                  child: Text('حذف',
+                                  child: const Text('حذف',
                                       style: TextStyle(color: Colors.red)),
                                   onPressed: () {
                                     AppCubit.get(context)
@@ -98,8 +98,8 @@ class _BuildingScreenState extends State<BuildingScreen> {
               children: [
                 RichText(
                   text: TextSpan(
-                    text: 'عمارة : ${titelcontroller.text}',
-                    style: TextStyle(
+                    text: 'عمارة : ${titelController.text}',
+                    style: const TextStyle(
                       fontSize: 20,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -125,19 +125,19 @@ class _BuildingScreenState extends State<BuildingScreen> {
                     if(cubit.isEnabled)
                     Expanded(
                       child: TextFormField(
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black),
                         textAlign: TextAlign.center,
-                        controller: pricecontroller,
+                        controller: priceController,
                         keyboardType: TextInputType.number,
                         enabled: cubit.isEnabled,
                         decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: const OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.orangeAccent)),
-                            disabledBorder: OutlineInputBorder(
+                            disabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
-                            label: Text(
+                            label: const Text(
                               'سعر الصيانة',
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
@@ -151,7 +151,7 @@ class _BuildingScreenState extends State<BuildingScreen> {
                       Expanded(
                         child: Column(
                           children: [
-                            Text('سعر الصيانة',style: TextStyle(
+                            const Text('سعر الصيانة',style: TextStyle(
                               fontSize: 15,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -162,7 +162,7 @@ class _BuildingScreenState extends State<BuildingScreen> {
                                 Expanded(
                                   child: ConstrainedBox(
                                     constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width*0.6),
-                                    child: Text(pricecontroller.text,style: TextStyle(
+                                    child: Text(priceController.text,style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                       overflow: TextOverflow.ellipsis,
@@ -176,15 +176,8 @@ class _BuildingScreenState extends State<BuildingScreen> {
                           ],
                         ),
                       ),
-                    SizedBox(width: 30),
+                    const SizedBox(width: 30),
                     MaterialButton(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.add),
-                          Text('قطع الغيار'),
-                        ],
-                      ),
                       color: defaultColor[300],
                       onPressed: () {
                         cubit.getPartsFromDb(widget.model['id']);
@@ -196,13 +189,20 @@ class _BuildingScreenState extends State<BuildingScreen> {
                                   child: PartsScreen(widget.model)),
                             ));
                       },
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.add),
+                          Text('قطع الغيار'),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
+                  style: const TextStyle(color: Colors.black),
+                  decoration: const InputDecoration(
                       enabledBorder: OutlineInputBorder(
                           borderSide:
                           BorderSide(color: Colors.orangeAccent)),
@@ -215,17 +215,17 @@ class _BuildingScreenState extends State<BuildingScreen> {
                       ),
                       // hintText: '${model['titel']}',
                       border: OutlineInputBorder()),
-                  controller: titelcontroller,
+                  controller: titelController,
                   enabled: cubit.isEnabled,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 TextFormField(
-                  style: TextStyle(color: Colors.black),
-                  controller: descriptioncontroller,
+                  style: const TextStyle(color: Colors.black),
+                  controller: descriptionController,
                   enabled: cubit.isEnabled,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       enabledBorder: OutlineInputBorder(
                           borderSide:
                           BorderSide(color: Colors.orangeAccent)),
@@ -239,37 +239,37 @@ class _BuildingScreenState extends State<BuildingScreen> {
                       // hintText: '${model['titel']}',
                       border: OutlineInputBorder()),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: defaultColor),
                     ),
-                    child: Text(cubit.isEnabled ? 'حفظ' : 'اضغط هنا للتعديل',
-                        style: TextStyle(
-                            fontSize: 20,
-                            color:
-                                cubit.isEnabled ? defaultColor : Colors.grey)),
                     onPressed: cubit.isEnabled
                         ? () {
                             cubit.isEnabled = false;
                             cubit.updateBuildingNameDb(
-                                titel: titelcontroller.text,
-                                description: descriptioncontroller.text,
-                                price: double.parse(pricecontroller.text),
+                                titel: titelController.text,
+                                description: descriptionController.text,
+                                price: double.parse(priceController.text),
                                 id: widget.model['id']);
                           }
                         : () {
                             cubit.change(true);
-                          }),
+                          },
+                    child: Text(cubit.isEnabled ? 'حفظ' : 'اضغط هنا للتعديل',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color:
+                                cubit.isEnabled ? defaultColor : Colors.grey))),
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: Container(
                     child: GridView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 4,
                         mainAxisSpacing: 20.0,
                         crossAxisSpacing: 20.0,
@@ -289,20 +289,17 @@ class _BuildingScreenState extends State<BuildingScreen> {
                                         //     'تأكيد عملية الدفع'),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: Text('تراجع',
-                                                style: TextStyle(
-                                                    color: Colors.red)),
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
                                             style: TextButton.styleFrom(
                                                 backgroundColor:
                                                     Colors.grey[300]),
+                                            child: const Text('تراجع',
+                                                style: TextStyle(
+                                                    color: Colors.red)),
                                           ),
                                           TextButton(
-                                            child: Text('تم الدفع',
-                                                style: TextStyle(
-                                                    color: Colors.green)),
                                             onPressed: () {
                                               int state;
                                               state = widget.model[
@@ -327,6 +324,9 @@ class _BuildingScreenState extends State<BuildingScreen> {
                                             style: TextButton.styleFrom(
                                                 backgroundColor:
                                                     Colors.grey[300]),
+                                            child: const Text('تم الدفع',
+                                                style: TextStyle(
+                                                    color: Colors.green)),
                                           ),
                                         ],
                                       ),
@@ -343,7 +343,7 @@ class _BuildingScreenState extends State<BuildingScreen> {
                             child: Center(
                               child: Text(
                                 (index + 1).toString(),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 20,
                                 ),
                               ),

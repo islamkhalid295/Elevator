@@ -2,8 +2,6 @@ import 'package:conditional_builder_rec/conditional_builder_rec.dart';
 import 'package:elevator/modules/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-import '../componant/componant.dart';
 import '../cubit/appCubit.dart';
 import '../cubit/appStates.dart';
 import '../shared/shared.dart';
@@ -26,14 +24,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
-        if (state is insertDbState) Navigator.pop(context);
+        if (state is InsertDbState) Navigator.pop(context);
       },
       builder: (context, state) {
         AppCubit cubit = AppCubit.get(context);
         return Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
-            title: FittedBox(child: Text("متابع المصاعد")),
+            title: const FittedBox(child: Text("متابع المصاعد")),
             elevation: 0,
             backgroundColor: defaultColor[100],
             actions: [
@@ -42,17 +40,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Search(),
+                          builder: (context) => const Search(),
                         ));
                   },
-                  icon: Icon(Icons.search)),
+                  icon: const Icon(Icons.search)),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: DropdownMenu<String>(
                   width: 130,
                   menuStyle: MenuStyle(shadowColor: MaterialStateColor.resolveWith((states) => Colors.orange
                   )),
-                  label: Text("الشهر"),
+                  label: const Text("الشهر"),
                   initialSelection: AppCubit.monthList.first,
                   onSelected: (String? value) {
                     cubit.dropdownButtonChange(value);
@@ -75,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
           body: ConditionalBuilderRec(
             builder: (context) => cubit.screens[cubit.currentIndex],
             condition: state is! Loding,
-            fallback: (context) => Center(child: CircularProgressIndicator()),
+            fallback: (context) => const Center(child: CircularProgressIndicator()),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -83,8 +81,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (formKey.currentState!.validate()) {
                   cubit.insertBuildingDb(titelController.text,
                       descriptionController.text,double.parse(priceController.text));
-                  print(
-                      'dis : ${descriptionController.text}\n status : ${cubit.dropdownMonthValue}');
                   cubit.changeBottomSheetState(false, Icons.edit);
                 }
               } else {
@@ -101,16 +97,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                   TextFormField(
                                       controller: titelController,
                                       validator: (value) {
-                                        if (value!.isEmpty)
+                                        if (value!.isEmpty) {
                                           return 'يجب ادخال اسم العمارة';
+                                        }
+                                        return null;
                                       },
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           label: Text("اسم العمارة"),
                                           icon: Icon(Icons.title_outlined),
                                           border: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(10))))),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   // TextFormField(
@@ -140,25 +138,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                   // ),
                                   TextFormField(
                                       controller: descriptionController,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           label: Text("الوصف"),
                                           icon: Icon(Icons.text_snippet_outlined),
                                           border: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(10))))),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   TextFormField(
                                       controller: priceController,
                                       keyboardType: TextInputType.number,
                                       validator: (value) {
-                                        if (value!.isEmpty)
+                                        if (value!.isEmpty) {
                                           return 'يجب ادخال سعر الصيانة';
-                                        if(double.parse(value) is! num)
-                                          return 'يجب ان يكون السعر ارقام';
+                                        }
+                                        return null;
                                       },
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           label: Text("سعر الصيانة"),
                                           icon: Icon(Icons.attach_money),
                                           border: OutlineInputBorder(
@@ -186,14 +184,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   cubit.changeBottomSheetState(false, Icons.edit);
                 });
                 cubit.changeBottomSheetState(true, Icons.add);
-                print("sheet opend");
               }
             },
             tooltip: 'Increment',
             child: Icon(cubit.fapIcon),
           ),
           bottomNavigationBar: BottomNavigationBar(
-              items: [
+              items: const [
                 BottomNavigationBarItem(
                     icon: Icon(Icons.business), label: "كل العمارات"),
                 BottomNavigationBarItem(

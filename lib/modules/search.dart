@@ -1,7 +1,7 @@
 import 'package:conditional_builder_rec/conditional_builder_rec.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../componant/componant.dart';
+import '../component/component.dart';
 import '../cubit/appCubit.dart';
 import '../cubit/appStates.dart';
 import '../shared/shared.dart';
@@ -114,7 +114,7 @@ class Search extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: "ابحث عن طريق ادخال اسم العمارة",
                     label: Text("Search"),
                     border: OutlineInputBorder(),
@@ -129,7 +129,6 @@ class Search extends StatelessWidget {
                   //controller: searchController,
                   onFieldSubmitted: (value) {
                     AppCubit.get(context).getAllFromDb(value);
-                    print(value);
                   },
                 ),
               ),
@@ -142,7 +141,7 @@ class Search extends StatelessWidget {
                       condition: state is! Loding,
                       builder: (context) => buildItem(list,state),
                       fallback: (context) =>
-                          Center(child: CircularProgressIndicator()),
+                          const Center(child: CircularProgressIndicator()),
                     ),
                   );
                 },

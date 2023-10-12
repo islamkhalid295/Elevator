@@ -1,13 +1,12 @@
 import 'package:conditional_builder_rec/conditional_builder_rec.dart';
-import 'package:elevator/componant/componant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../component/component.dart';
 import '../cubit/appCubit.dart';
 import '../cubit/appStates.dart';
 
-class notPaidScreen extends StatelessWidget {
-  const notPaidScreen({super.key});
+class NotPaidScreen extends StatelessWidget {
+  const NotPaidScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class notPaidScreen extends StatelessWidget {
           condition: list.isNotEmpty,
           fallback: (context) => Container(
             width: double.infinity,
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
