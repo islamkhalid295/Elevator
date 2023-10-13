@@ -169,8 +169,8 @@ class AppCubit extends Cubit<AppStates> {
   void updateBuildingNameDb(
       {required String titel, required String description,required double price, required int id}) {
     database.rawUpdate(
-        'UPDATE building SET titel  = ?, description = ?  where id = ? ',
-        [titel, description, id]).then((value) {
+        'UPDATE building SET titel  = ?, description = ?, price = ?  where id = ? ',
+        [titel, description, price, id]).then((value) {
       emit(UpdateDbState());
       toast('تم حفظ التعديل',Colors.green);
       getFromDb(database);
