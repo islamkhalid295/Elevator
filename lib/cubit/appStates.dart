@@ -6,9 +6,17 @@ class CreateDbState extends AppStates {}
 
 class InsertDbState extends AppStates {}
 
+class InsertDbErrorState extends AppStates {}
+
 class GetDbState extends AppStates {}
 
+class GetDbErrorState extends AppStates {}
+
+
 class UpdateDbState extends AppStates {}
+
+class UpdateDbErrorState extends AppStates {}
+
 
 class DeleteDbState extends AppStates {}
 

@@ -84,6 +84,7 @@ class AppCubit extends Cubit<AppStates> {
           .then((value) {
         emit(InsertDbState());
       }).catchError((error) {
+        emit(InsertDbErrorState());
       });
       return Future(() => null);
     }).then((value) {
@@ -99,6 +100,7 @@ class AppCubit extends Cubit<AppStates> {
           .then((value) {
         emit(InsertDbState());
       }).catchError((error) {
+        emit(InsertDbErrorState());
       });
       return Future(() => null);
     }).then((value) {
@@ -132,16 +134,18 @@ class AppCubit extends Cubit<AppStates> {
         .rawQuery(
             "SELECT * FROM building WHERE month${dropdownMonthValue.substring(dropdownMonthValue.length - 1)} = 0 ")
         .then((value) {
+      notPaidBuilding = value;
       database.rawQuery(
           "SELECT * FROM building WHERE month${dropdownMonthValue.substring(dropdownMonthValue.length - 1)} = 1")
           .then((value) {
         paidBuilding = value;
+        allBuilding = List.from(notPaidBuilding)..addAll(paidBuilding);
+        emit(GetDbState());
       }).catchError((error) {
+        emit(GetDbErrorState());
       });
-      notPaidBuilding = value;
-      allBuilding = List.from(notPaidBuilding)..addAll(paidBuilding);
-      emit(GetDbState());
     }).catchError((error) {
+      emit(GetDbErrorState());
     });
   }
 
@@ -163,6 +167,7 @@ class AppCubit extends Cubit<AppStates> {
       emit(UpdateDbState());
       getFromDb(database);
     }).catchError((error) {
+      emit(UpdateDbErrorState());
     });
   }
 
@@ -176,6 +181,7 @@ class AppCubit extends Cubit<AppStates> {
       getFromDb(database);
     }).catchError((error) {
       toast(error.toString(),Colors.red);
+      emit(UpdateDbErrorState());
     });
   }
 
@@ -197,7 +203,6 @@ class AppCubit extends Cubit<AppStates> {
         emit(DeleteDbState());
         getFromDb(database);
       });
-
     });
   }
 
@@ -206,7 +211,6 @@ class AppCubit extends Cubit<AppStates> {
         emit(DeleteDbState());
         getPartsFromDb(buildingId);
       });
-
   }
 
   static bool isDark = false;
